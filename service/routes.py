@@ -96,7 +96,7 @@ def create_products():
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 
-######################################################################
+9######################################################################
 # LIST PRODUCTS
 ######################################################################
 @app.route("/products", methods=["GET"])
@@ -225,12 +225,6 @@ def get_products(product_id):
     return product.serialize(), status.HTTP_200_OK
 
 
-def test_get_product_not_found(self):
-    """It should not Get a Product thats not found"""
-    response = self.client.get(f"{index.html}/0")
-    self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    data = response.get_json()
-    self.assertIn("was not found", data["message"])
 ######################################################################
 # UPDATE AN EXISTING PRODUCT
 ######################################################################
@@ -253,20 +247,6 @@ def update_products(product_id):
     product.update()
     return product.serialize(), status.HTTP_200_OK
 
-def test_update_product(self):
-    """It should Update an existing Product"""
-    # create a product to update
-    test_product = ProductFactory()
-    response = self.client.post(BASE_URL, json=test_product.serialize())
-    self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-    # update the product
-    new_product = response.get_json()
-    new_product["description"] = "unknown"
-    response = self.client.put(f"{BASE_URL}/{new_product['id']}", json=new_product)
-    self.assertEqual(response.status_code, status.HTTP_200_OK)
-    updated_product = response.get_json()
-    self.assertEqual(updated_product["description"], "unknown")
 ######################################################################
 # DELETE A PRODUCT
 ######################################################################
@@ -284,17 +264,3 @@ def delete_products(product_id):
         product.delete()
 
     return "", status.HTTP_204_NO_CONTENT
-
-def test_delete_product(self):
-    """It should Delete a Product"""
-    products = self._create_products(5)
-    product_count = self.get_product_count()
-    test_product = products[0]
-    response = self.client.delete(f"{BASE_URL}/{test_product.id}")
-    self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-    self.assertEqual(len(response.data), 0)
-    # make sure they are deleted
-    response = self.client.get(f"{BASE_URL}/{test_product.id}")
-    self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    new_count = self.get_product_count()
-    self.assertEqual(new_count, product_count - 1)
